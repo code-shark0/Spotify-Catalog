@@ -1,15 +1,15 @@
-// Basic searchbar for searching catalog. 
+// Basic textInput field for searchbar, username and password. 
 // TODO: Add search functionality
 
 import { TextField } from "@mui/material";
 import React, { FC } from "react";
 
-const SearchBar: FC = () => {
+const TextInput: FC = () => {
     return (
         <TextField>
-            Search Bar
+            TextInput
         </TextField>
     )
 }
 
-export default SearchBar;
+export default TextInput;

@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import React, { FC } from "react";
-import SearchBar from "../components/SearchBar";
+import TextInput from "../components/TextInput";
 import ResultsList from "../components/ResultsList";
 
 const Homepage: FC = () => {
     return (
         <Box>
-            <SearchBar/>
+            <TextInput/>
             <ResultsList/>
         </Box>
     )
