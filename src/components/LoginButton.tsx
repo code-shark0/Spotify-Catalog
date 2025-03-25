@@ -1,12 +1,13 @@
-// Basic auth button for logging in. 
-// TODO: Add login functionality
-
 import { Button } from "@mui/material";
 import React, { FC } from "react";
 
-const LoginButton: FC = () => {
+interface LoginButtonProps {
+    onClick: () => void;
+}
+
+const LoginButton: FC<LoginButtonProps> = ({ onClick }) => {
     return (
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={onClick}>
             Login
         </Button>
     )
