@@ -1,13 +1,15 @@
-// Basic textInput field for searchbar, username and password. 
-// TODO: Add search functionality
-
-import { TextField } from "@mui/material";
+import { TextField, TextFieldVariants } from "@mui/material";
 import React, { FC } from "react";
 
-const TextInput: FC = () => {
+interface TextInputProps {
+    label: string;
+    variant?: TextFieldVariants;
+}
+
+const TextInput: FC<TextInputProps> = ({ label, variant }) => {
     return (
-        <TextField>
-            TextInput
+        <TextField label={label} variant={variant || "outlined"}>
+            {label}
         </TextField>
     )
 }

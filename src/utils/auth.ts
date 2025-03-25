@@ -4,6 +4,7 @@ const CLIENT_ID = '34d36cbac71f4cb7b1471216e6b1b369' //import.meta.env.VITE_SPOT
 const REDIRECT_URI = 'http://localhost:3000/callback';
 const AUTH_URL = 'https://accounts.spotify.com/authorize';
 const TOKEN_URL = 'https://accounts.spotify.com/api/token';
+const SCOPE = 'user-library-read, ';
 
 const generateCodeVerifier = (): string => {
 	const array = new Uint8Array(32);
@@ -35,7 +36,7 @@ export const login = async () => {
 		redirect_uri: REDIRECT_URI,
 		code_challenge_method: 'S256',
 		code_challenge: codeChallenge,
-		scope: 'user-library-read',
+		scope: SCOPE,
 	});
 
 	window.location.href = `${AUTH_URL}?${params}`;

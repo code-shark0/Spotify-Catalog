@@ -1,10 +1,8 @@
-// Basic login page for logging in. 
-// TODO: Add login functionality
-
-import { Box } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import React, { FC } from "react";
 import LoginButton from "../components/LoginButton";
 import AuthService from '../utils/auth';
+import TextInput from "../components/TextInput";
 
 const LoginPage: FC = () => {
     const handleLoginClick = () => {
@@ -12,7 +10,16 @@ const LoginPage: FC = () => {
     }
 
     return (
-        <Box>
+        <Box 
+            sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                height: '100vh' 
+            }}>
+            <TextField label={"Username"} variant={"outlined"} />
+            <TextField label={"Password"} variant={"outlined"} type={"password"}/>
             <LoginButton onClick={handleLoginClick}/>
         </Box>
     )
