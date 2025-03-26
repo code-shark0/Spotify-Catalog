@@ -91,9 +91,9 @@ export const handleCallback = async () => {
 		
 		// Store tokens
 		localStorage.setItem('access_token', response.access_token);
-
-		// Ideally, I would add something in here to check for the expiration time of the token. 
-		// Setting a timer of some kind with a callback to refresh the token would be a good start
+		if (response.refresh_token) {
+			localStorage.setItem('refresh_token', response.refresh_token);
+		}
 
 		// Redirect to the home page
 		window.history.replaceState({}, '', '/');
@@ -105,6 +105,37 @@ export const handleCallback = async () => {
 };
 
 export const getAccessToken = () => localStorage.getItem('access_token');
+
+export const refreshAccessToken = async () => {
+	console.log('Refreshing access token...');
+    // refresh token that has been previously stored
+	const refreshToken = localStorage.getItem('refresh_token');
+	if (!refreshToken) {
+		console.error('No refresh token found in local storage');
+		return;
+	}
+
+	const url = "https://accounts.spotify.com/api/token";
+
+	const payload = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		body: new URLSearchParams({
+			grant_type: 'refresh_token',
+			refresh_token: refreshToken,
+			client_id: CLIENT_ID
+		}),
+	}
+	const body = await fetch(url, payload);
+	const response = await body.json();
+
+	localStorage.setItem('access_token', response.access_token);
+	if (response.refresh_token) {
+		localStorage.setItem('refresh_token', response.refresh_token);
+	}
+}
 
 // I would of course want to add a logout function with a button somewhere in the home page to access it.
 export const logout = async () => {

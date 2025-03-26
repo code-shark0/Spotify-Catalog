@@ -1,7 +1,3 @@
-// List of ResultsItems.
-// TODO: Add list functionality
-
-import { Box } from "@mui/material";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import React, { FC, useEffect, useState } from "react";
 
@@ -15,7 +11,6 @@ type ListItem = {
     type: string;
     genre: string;
 }
-// picture of artwork, name, genere, type
 
 // Results list that displays all catalog items filtered by a search
 // The data coming in is assumed to be an aggregated superset of all the users saved albums, tracks, and episodes

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { getAccessToken, handleCallback, login, logout } from '../utils/auth';
+import { getAccessToken, handleCallback, login, logout, refreshAccessToken } from '../utils/auth';
 
 const AuthContext = createContext<{ isAuthenticated: boolean; login: () => void, logout: () => void }>({
 	isAuthenticated: false,
@@ -31,6 +31,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				});
 		}
 	}, []);
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			const interval = setInterval(() => {
+				refreshAccessToken();
+			}, 1000 * 60 * 59); // Refresh every 59 minutes 
+			return () => clearInterval(interval);
+		}
+	}, [isAuthenticated]);
 
 	return (
 		<AuthContext.Provider value={{ isAuthenticated, login, logout }}>
