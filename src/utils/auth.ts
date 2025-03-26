@@ -4,7 +4,7 @@ const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
 const REDIRECT_URI = 'http://localhost:3000/callback';
 const AUTH_URL = 'https://accounts.spotify.com/authorize';
 const TOKEN_URL = 'https://accounts.spotify.com/api/token';
-const scope = 'user-library-read, ';
+const scope = 'user-library-read';
 
 const generateCodeVerifier = (): string => {
 	const array = new Uint8Array(32);
@@ -49,7 +49,6 @@ export const handleCallback = async () => {
 	const codeVerifier = localStorage.getItem('code_verifier');
 	if (!codeVerifier) throw new Error('No code verifier found');
 
-	const url = "https://accounts.spotify.com/api/token";
 	const payload = {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -57,16 +56,16 @@ export const handleCallback = async () => {
 			client_id: CLIENT_ID,
 			grant_type: 'authorization_code',
 			code,
-			redrict_uri: REDIRECT_URI,
+			redirect_uri: REDIRECT_URI,
 			code_verifier: codeVerifier,
 		}),
 	};
 
-	const body = await fetch(url, payload);
+	const body = await fetch(TOKEN_URL, payload);
 	const response = await body.json();
 	localStorage.setItem('access_token', response.access_token);
 
-	window.history.replaceState({}, '', '/');
+	// window.history.replaceState({}, '', '/');
 };
 
 export const getAccessToken = () => localStorage.getItem('access_token');

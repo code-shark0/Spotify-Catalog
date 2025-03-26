@@ -1,10 +1,16 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import theme from './theme';
 import LoginPage from './pages/LoginPage';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Homepage from "./pages/HomePage";
+import { JSX } from "@emotion/react/jsx-runtime";
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+    const { isAuthenticated } = useAuth();
+    return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 function App() {
     return (
@@ -13,7 +19,7 @@ function App() {
                 <BrowserRouter>
                     <Routes>
                         <Route path="/login" element={<LoginPage />} />
-                        <Route path="/" element={<Homepage />} />
+                        <Route path="/" element={<ProtectedRoute><Homepage /></ProtectedRoute>} />
                         <Route path="/callback" element={<LoginPage />} />
                     </Routes>
                 </BrowserRouter>
