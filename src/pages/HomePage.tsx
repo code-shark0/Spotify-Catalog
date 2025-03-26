@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import TextInput from "../components/TextInput";
 import ResultsList from "../components/ResultsList";
@@ -9,6 +9,10 @@ import AuthService from "../utils/auth";
 const Homepage: FC = () => {
     console.log("Rendering Homepage");
     const [listData, setListData] = useState<Array<any>>([]);
+    const [filteredData, setFilteredData] = useState<Array<any>>([]);
+    const [searchValue, setSearchValue] = useState('');
+
+    console.log(searchValue);
 
     useEffect(() => {
         const loadContent = async () => {
@@ -24,6 +28,23 @@ const Homepage: FC = () => {
 
         loadContent();
     }, []);
+
+    useEffect(() => {
+        const filteredData = listData.filter(item => {
+            return (
+                item?.name?.toLowerCase().includes(searchValue?.toLowerCase()) || 
+                item?.type?.toLowerCase().includes(searchValue?.toLowerCase()) ||
+                item?.genere?.toLowerCase().includes(searchValue?.toLowerCase()) ||
+                (item?.artists ?? []).some((artist: any) => 
+                    artist?.name?.toLowerCase().includes(searchValue?.toLowerCase())
+                ) ||
+                item?.album?.name?.toLowerCase().includes(searchValue?.toLowerCase()) ||
+                item?.track?.name?.toLowerCase().includes(searchValue?.toLowerCase()) ||
+                item?.episode?.name?.toLowerCase().includes(searchValue?.toLowerCase())
+            );
+        });
+        setFilteredData(filteredData);
+    }, [searchValue, listData]);
 
     const handleLogoutClick = () => {
         AuthService.logout();
@@ -51,8 +72,8 @@ const Homepage: FC = () => {
                     Logout
                 </Button>
             </Box>
-            <TextInput label={'Search'}/>
-            <ResultsList data={listData}/>
+            <TextField variant={"outlined"} label={'Search'} onChange={(e) => setSearchValue(e.target.value)}/>
+            <ResultsList data={filteredData}/>
         </Box>
     )
 }

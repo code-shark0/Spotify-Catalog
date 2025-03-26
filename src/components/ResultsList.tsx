@@ -2,6 +2,7 @@
 // TODO: Add list functionality
 
 import { Box } from "@mui/material";
+import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import React, { FC, useEffect, useState } from "react";
 
 interface ResultsListProps {
@@ -29,12 +30,66 @@ const ResultsList: FC<ResultsListProps> = ({data}) => {
             genre: item?.genres?.[0]}}));
     }, [data]);
 
-    console.log(data, listData);
+    const columnHelper = createColumnHelper<ListItem>();
+    const columns = [
+        columnHelper.accessor('image', {
+            header: 'Image',
+            cell: info => <img src={info.getValue()?.url} style={{width: "100px"}} alt="Album Artwork"/>,
+            enableSorting: false,
+        }),
+        columnHelper.accessor('name', {
+            header: 'Name',
+            cell: info => info.renderValue(),
+            enableSorting: true,
+        }),
+        columnHelper.accessor('type', {
+            header: 'Type',
+            cell: info => info.renderValue(),
+            enableSorting: true,
+        }),
+        columnHelper.accessor('genre', {
+            header: 'Genre',
+            cell: info => info.renderValue(),
+            enableSorting: true,
+        })
+    ]
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    })
 
     return (
-        <Box>
-            {/* {data.map(item => <ResultsItem key={item?.id} item={item}/>)} */}
-        </Box>
+        <table>
+            <thead>
+                {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                    <th key={header.id}>
+                        {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                            )}
+                    </th>
+                    ))}
+                </tr>
+                ))}
+            </thead>
+            <tbody>
+                {table.getRowModel().rows.map(row => (
+                <tr key={row.id}>
+                    {row.getVisibleCells().map(cell => (
+                    <td key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                    ))}
+                </tr>
+                ))}
+            </tbody>
+        </table>
     )
 }
 
