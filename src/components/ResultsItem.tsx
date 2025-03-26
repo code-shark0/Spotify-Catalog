@@ -4,7 +4,13 @@
 import { Box } from "@mui/material";
 import React, { FC } from "react";
 
-const ResultsItem: FC = () => {
+interface ResultsItemProps {
+    item: any;
+}
+
+const ResultsItem: FC<ResultsItemProps> = ({item}) => {
+    console.log(item);
+    
     return (
         <Box>
             Results Item
