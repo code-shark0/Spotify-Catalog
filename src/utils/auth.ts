@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 
 const CLIENT_ID = "34d36cbac71f4cb7b1471216e6b1b369";//import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const REDIRECT_URI = 'http://localhost:3001/callback';
+const REDIRECT_URI = 'http://127.0.0.1:3001/callback';
 const AUTH_URL = 'https://accounts.spotify.com/authorize';
 const TOKEN_URL = 'https://accounts.spotify.com/api/token';
 const scope = 'user-library-read';
@@ -16,7 +16,7 @@ const generateCodeVerifier = (): string => {
 
 const generateCodeChallenge = async (verifier: string): Promise<string> => {
 	const data = new TextEncoder().encode(verifier);
-  	const hashed = await crypto.subtle.digest('SHA-256', data);
+	const hashed = await crypto.subtle.digest('SHA-256', data);
 
 	const code_challenge_base64 = btoa(String.fromCharCode(...new Uint8Array(hashed)))
 		.replace(/=/g, '')
