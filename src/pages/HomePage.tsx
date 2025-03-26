@@ -1,19 +1,28 @@
-import { Box } from "@mui/material";
-import React, { FC, useEffect } from "react";
+import { Box, Button } from "@mui/material";
+import React, { FC, useEffect, useState } from "react";
 import TextInput from "../components/TextInput";
 import ResultsList from "../components/ResultsList";
 import theme from "../theme";
-import { fetchSavedAlbums } from "../api/spotifyApi";
+import { fetchSavedAlbums, fetchSavedEpisodes, fetchSavedTracks } from "../api/spotifyApi";
+import AuthService from "../utils/auth";
 
 const Homepage: FC = () => {
+    const [listData, setListData] = useState<Array<any>>([]);
+
     useEffect(() => {
-        const loadAlbums = async () => {
+        const loadContent = async () => {
             const albums = await fetchSavedAlbums();
-            console.log(albums);
+            const tracks = await fetchSavedTracks();
+            const episodes = await fetchSavedEpisodes();
+            setListData([...albums, ...tracks, ...episodes]);
         }
 
-        loadAlbums();
-    }, [])
+        loadContent();
+    }, []);
+
+    const handleLogoutClick = () => {
+        AuthService.logout();
+    }
 
     return (
         <Box
@@ -33,10 +42,12 @@ const Homepage: FC = () => {
                 backgroundColor: theme.palette.primary.dark
 
             }}>
-                {/* <LogoutButton/> */}
+                <Button variant="contained" color="secondary" onClick={handleLogoutClick}>
+                    Logout
+                </Button>
             </Box>
             <TextInput label={'Search'}/>
-            <ResultsList/>
+            <ResultsList data={listData}/>
         </Box>
     )
 }
