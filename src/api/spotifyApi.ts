@@ -1,12 +1,26 @@
 export const fetchSavedAlbums = async () => {
-	const accessToken = localStorage.getItem("access_token");
+	return await fetchItems("https://api.spotify.com/v1/me/albums");
+};
+
+export const fetchSavedTracks = async () => {
+    return await fetchItems("https://api.spotify.com/v1/me/tracks");
+}
+
+export const fetchSavedEpisodes = async () => {
+    return await fetchItems("https://api.spotify.com/v1/me/episodes");
+}
+
+// TODO add parallelization and pagination
+
+const fetchItems = async (url: string) => {
+    const accessToken = localStorage.getItem("access_token");
 	if (!accessToken) {
 		console.error("No access token found");
 		return [];
 	}
 
 	try {
-		const response = await fetch("https://api.spotify.com/v1/me/albums", {
+		const response = await fetch(url, {
 			method: "GET",
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
@@ -21,5 +35,4 @@ export const fetchSavedAlbums = async () => {
 		console.error("Error fetching saved albums:", error);
 		return [];
 	}
-};
-
+}
