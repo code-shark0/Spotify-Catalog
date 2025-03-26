@@ -6,7 +6,7 @@ import ResultsList from "../components/ResultsList";
 const Homepage: FC = () => {
     return (
         <Box>
-            <TextInput/>
+            <TextInput label={'Search'}/>
             <ResultsList/>
         </Box>
     )
