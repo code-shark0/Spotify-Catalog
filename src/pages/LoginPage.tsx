@@ -1,6 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import React, { FC } from "react";
-import LoginButton from "../components/LoginButton";
 import AuthService from '../utils/auth';
 
 const LoginPage: FC = () => {
@@ -23,7 +22,9 @@ const LoginPage: FC = () => {
             <Typography>
                 To access your catalog, please login with your spotify account.
             </Typography>
-            <LoginButton onClick={handleLoginClick}/>
+            <Button variant="contained" color="primary" onClick={handleLoginClick}>
+                Login
+            </Button>
         </Box>
     )
 }
