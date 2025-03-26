@@ -6,7 +6,6 @@ import AuthService from '../utils/auth';
 const LoginPage: FC = () => {
     const handleLoginClick = () => {
         AuthService.login();
-        console.log('in login click')
     }
 
     return (
