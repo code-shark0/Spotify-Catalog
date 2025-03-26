@@ -18,10 +18,11 @@ const LoginPage: FC = () => {
                 height: '100vh', 
                 width: '100vw',
                 gap: '1rem',
-            }}>
-                <Typography>
-                    To access your catalog, please login with your spotify account.
-                </Typography>
+            }}
+        >
+            <Typography>
+                To access your catalog, please login with your spotify account.
+            </Typography>
             <LoginButton onClick={handleLoginClick}/>
         </Box>
     )
