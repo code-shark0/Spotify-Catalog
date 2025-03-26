@@ -7,14 +7,19 @@ import { fetchSavedAlbums, fetchSavedEpisodes, fetchSavedTracks } from "../api/s
 import AuthService from "../utils/auth";
 
 const Homepage: FC = () => {
+    console.log("Rendering Homepage");
     const [listData, setListData] = useState<Array<any>>([]);
 
     useEffect(() => {
         const loadContent = async () => {
-            const albums = await fetchSavedAlbums();
-            const tracks = await fetchSavedTracks();
-            const episodes = await fetchSavedEpisodes();
-            setListData([...albums, ...tracks, ...episodes]);
+            const albums: Array<any> = await fetchSavedAlbums();
+            const tracks: Array<any> = await fetchSavedTracks();
+            const episodes: Array<any> = await fetchSavedEpisodes();
+            setListData([
+                ...albums?.map(album => album?.album), 
+                ...tracks?.map(album => album?.track),
+                ...episodes?.map(album => album?.episode),
+            ]);
         }
 
         loadContent();
