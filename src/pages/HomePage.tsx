@@ -1,18 +1,14 @@
 import { Box, Button, TextField } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
-import TextInput from "../components/TextInput";
 import ResultsList from "../components/ResultsList";
 import theme from "../theme";
 import { fetchSavedAlbums, fetchSavedEpisodes, fetchSavedTracks } from "../api/spotifyApi";
 import AuthService from "../utils/auth";
 
 const Homepage: FC = () => {
-    console.log("Rendering Homepage");
     const [listData, setListData] = useState<Array<any>>([]);
     const [filteredData, setFilteredData] = useState<Array<any>>([]);
     const [searchValue, setSearchValue] = useState('');
-
-    console.log(searchValue);
 
     useEffect(() => {
         const loadContent = async () => {
