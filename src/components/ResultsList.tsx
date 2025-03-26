@@ -55,7 +55,7 @@ const ResultsList: FC<ResultsListProps> = ({data}) => {
     ]
 
     const table = useReactTable({
-        data,
+        data: listData,
         columns,
         getCoreRowModel: getCoreRowModel(),
     })
