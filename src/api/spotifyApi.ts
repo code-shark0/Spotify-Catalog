@@ -24,14 +24,13 @@ export const fetchAllItems = async () => {
 	});
 
 	const artistGenres = await fetchArtistsGenres(Array.from(artistIds));
-	console.log(artistGenres);
 
 	const finalData: Array<ListItem | null> = data.flatMap(item => item.items).map(item => {
 		let genres: Array<string> = [];
 		if (Object.keys(item).includes('album')){
 			genres = item.album.artists.flatMap((artist: { id: string }) => artistGenres[artist.id] || []);
 			return {
-				image: item?.album?.images?.[2], 
+				image: item?.album?.images?.[2] ?? item?.album?.images?.[1] ?? item?.album?.images?.[0] ?? null,
 				name: item?.album?.name,
 				type: item?.album?.type,
 				genres,
@@ -39,14 +38,14 @@ export const fetchAllItems = async () => {
 		} else if (Object.keys(item).includes('track')){
 			genres = item.track.artists.flatMap((artist: { id: string }) => artistGenres[artist.id] || []);
 			return {
-				image: item?.track?.album?.images?.[2], 
+				image: item?.track?.album?.images?.[2] ?? item?.track?.album?.images?.[1] ?? item?.track?.album?.images?.[0] ?? null, 
 				name: item?.track?.name,
 				type: item?.track?.type,
 				genres,
 			}
 		} else if (Object.keys(item).includes('episode')){
 			return {
-				image: item?.episode?.images?.[2], 
+				image: item?.episode?.images?.[2] ?? item?.episode?.images?.[1] ?? item?.episode?.images?.[0] ?? null, 
 				name: item?.episode?.name,
 				type: item?.episode?.type,
 				genres: ['N/A'],

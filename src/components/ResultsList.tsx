@@ -18,9 +18,6 @@ const ResultsList: FC<ResultsListProps> = ({data}) => {
     // coming in, and dynamically make calls to grab more data as the user scrolls down the page, or when the
     // next page is requested if it was made in a table with pagination.
 
-    // Another obviously important bug is how the core elements on the home page shrinks down to the center of the screen instead of 
-    // sticking up at the top
-
     useEffect(() => {
         setListData(data.map(item => {return {
             image: item?.image, 
