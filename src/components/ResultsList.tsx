@@ -1,15 +1,9 @@
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import React, { FC, useEffect, useState } from "react";
+import { ListItem } from "../models/model";
 
 interface ResultsListProps {
-    data: Array<any>; // Todo: find and add a proper type for this
-}
-
-type ListItem = {
-    image: {height: number, width: number, url: string};
-    name: string;
-    type: string;
-    genre: string;
+    data: Array<ListItem>; // Todo: find and add a proper type for this
 }
 
 // Results list that displays all catalog items filtered by a search
@@ -19,17 +13,17 @@ const ResultsList: FC<ResultsListProps> = ({data}) => {
 
     useEffect(() => {
         setListData(data.map(item => {return {
-            image: item?.type === "track" ? item?.album?.images?.[2] : item?.images?.[2], 
-            name: item?.name, 
-            type: item?.type, 
-            genre: item?.genres?.[0]}}));
+            image: item?.image, 
+            name: item?.name,
+            type: item?.type,
+            genres: item?.genres}}));
     }, [data]);
 
     const columnHelper = createColumnHelper<ListItem>();
     const columns = [
         columnHelper.accessor('image', {
             header: 'Image',
-            cell: info => <img src={info.getValue()?.url} style={{width: "100px"}} alt="Album Artwork"/>,
+            cell: info => <img src={info.getValue()?.url} style={{width: "40px"}} alt="Album Artwork"/>,
             enableSorting: false,
         }),
         columnHelper.accessor('name', {
@@ -42,10 +36,10 @@ const ResultsList: FC<ResultsListProps> = ({data}) => {
             cell: info => info.renderValue(),
             enableSorting: true,
         }),
-        columnHelper.accessor('genre', {
-            header: 'Genre',
-            cell: info => info.renderValue(),
-            enableSorting: true,
+        columnHelper.accessor('genres', {
+            header: 'Genres',
+            cell: info => info.renderValue()?.join(', '),
+            enableSorting: false
         })
     ]
 

@@ -2,24 +2,19 @@ import { Box, Button, TextField } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import theme from "../theme";
-import { fetchSavedAlbums, fetchSavedEpisodes, fetchSavedTracks } from "../api/spotifyApi";
+import { fetchAllItems } from "../api/spotifyApi";
 import AuthService from "../utils/auth";
+import { ListItem } from "../models/model";
 
 const Homepage: FC = () => {
-    const [listData, setListData] = useState<Array<any>>([]);
+    const [listData, setListData] = useState<Array<ListItem>>([]);
     const [filteredData, setFilteredData] = useState<Array<any>>([]);
     const [searchValue, setSearchValue] = useState('');
 
     useEffect(() => {
         const loadContent = async () => {
-            const albums: Array<any> = await fetchSavedAlbums();
-            const tracks: Array<any> = await fetchSavedTracks();
-            const episodes: Array<any> = await fetchSavedEpisodes();
-            setListData([
-                ...albums?.map(album => album?.album), 
-                ...tracks?.map(album => album?.track),
-                ...episodes?.map(album => album?.episode),
-            ]);
+            const items: Array<any> = await fetchAllItems();
+            setListData(items);
         }
 
         loadContent();
@@ -29,14 +24,7 @@ const Homepage: FC = () => {
         const filteredData = listData.filter(item => {
             return (
                 item?.name?.toLowerCase().includes(searchValue?.toLowerCase()) || 
-                item?.type?.toLowerCase().includes(searchValue?.toLowerCase()) ||
-                item?.genere?.toLowerCase().includes(searchValue?.toLowerCase()) ||
-                (item?.artists ?? []).some((artist: any) => 
-                    artist?.name?.toLowerCase().includes(searchValue?.toLowerCase())
-                ) ||
-                item?.album?.name?.toLowerCase().includes(searchValue?.toLowerCase()) ||
-                item?.track?.name?.toLowerCase().includes(searchValue?.toLowerCase()) ||
-                item?.episode?.name?.toLowerCase().includes(searchValue?.toLowerCase())
+                item?.type?.toLowerCase().includes(searchValue?.toLowerCase())
             );
         });
         setFilteredData(filteredData);
