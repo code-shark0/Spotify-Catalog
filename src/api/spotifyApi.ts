@@ -1,3 +1,5 @@
+import { ListItem } from "../models/model";
+
 export const fetchAllItems = async () => {
 	// Get the albums, tracks, and episodes. 
 	// Using this data, get the artist IDs.
@@ -11,128 +13,51 @@ export const fetchAllItems = async () => {
 	];
 
 	const data = await Promise.all(endpoints.map(endpoint => fetchItems(endpoint)));
-	interface ListItem {
-		image: {height: number, width: number, url: string};
-		name: string;
-		type: string;
-		genres: Array<string>;
-	}
+
+	const artistIds: Set<string> = new Set();
+	data.flatMap(item => item.items).forEach(item => {
+		if (item.album) {
+			item.album.artists.forEach((artist: { id: string }) => artistIds.add(artist.id));
+		} else if (item.track) {
+			item.track.artists.forEach((artist: { id: string }) => artistIds.add(artist.id));
+		}
+	});
+
+	const artistGenres = await fetchArtistsGenres(Array.from(artistIds));
+	console.log(artistGenres);
+
 	const finalData: Array<ListItem | null> = data.flatMap(item => item.items).map(item => {
+		let genres: Array<string> = [];
 		if (Object.keys(item).includes('album')){
+			genres = item.album.artists.flatMap((artist: { id: string }) => artistGenres[artist.id] || []);
 			return {
 				image: item?.album?.images?.[2], 
 				name: item?.album?.name,
 				type: item?.album?.type,
-				genres: [] as Array<string>,
+				genres,
 			}
 		} else if (Object.keys(item).includes('track')){
+			genres = item.track.artists.flatMap((artist: { id: string }) => artistGenres[artist.id] || []);
 			return {
 				image: item?.track?.album?.images?.[2], 
 				name: item?.track?.name,
 				type: item?.track?.type,
-				genres: [] as Array<string>,
+				genres,
 			}
 		} else if (Object.keys(item).includes('episode')){
 			return {
 				image: item?.episode?.images?.[2], 
 				name: item?.episode?.name,
 				type: item?.episode?.type,
-				genres: [] as Array<string>,
+				genres: ['N/A'],
 			}
 		} else {
 			console.error('unexpected object');
 			return null;
 		}
 	})
-	console.log(data, finalData);
-	return finalData;
+	return finalData.filter(item => item !== null) as Array<ListItem>;
 }
-
-// export const fetchSavedAlbums = async () => {
-// 	// return await fetchItemsWithGenres();
-// };
-
-// export const fetchSavedTracks = async () => {
-//     return await fetchItems("https://api.spotify.com/v1/me/tracks");
-// }
-
-// export const fetchSavedEpisodes = async () => {
-//     return await fetchItems("https://api.spotify.com/v1/me/episodes");
-// }
-
-// export const fetchGeneresFromArtistIds = async (artistIds: string[]) => {
-// 	const accessToken = localStorage.getItem("access_token");
-// 	if (!accessToken) {
-// 		console.error("No access token found");
-// 		return [];
-// 	}
-
-// 	try {
-// 		const endpoint = "https://api.spotify.com/v1/artists?ids=" + artistIds.join(",");
-// 		const response = await fetch(endpoint, {
-// 			method: "GET",
-// 			headers: { Authorization: `Bearer ${accessToken}` },
-// 		});
-
-// 		if (!response.ok) {
-// 			throw new Error(`HTTP error! Status: ${response.status}`);
-// 		}
-
-// 		const data = await response.json();
-// 		const artistIds = [
-// 			...new Set(data.items.flatMap((item: any) => item.album?.artists.map((artist: any) => artist.id)))
-// 		]
-// 		console.log(artistIds);
-
-// 		if(artistIds.length > 0) {
-// 			const artistData = await fetchGeneresFromArtistIds(artistIds as string[]); // Todo: Add a check to verify that artistIds are formatted correctly.
-// 			console.log(artistData);
-// 		}
-		
-// 		return data.items; // Each item contains album details
-// 	} catch (error) {
-// 		console.error("Error fetching saved albums:", error);
-// 		return [];
-// 	}
-// 	// return await fetchItemsWithGenres("https://api.spotify.com/v1/artists?ids=" + artistIds.join(","));
-// }
-
-// TODO add parallelization and pagination
-
-// const fetchItemsWithGenres = async (url: string) => {
-//     const accessToken = localStorage.getItem("access_token");
-// 	if (!accessToken) {
-// 		console.error("No access token found");
-// 		return [];
-// 	}
-
-// 	try {
-// 		const response = await fetch(url, {
-// 			method: "GET",
-// 			headers: { Authorization: `Bearer ${accessToken}` },
-// 		});
-
-// 		if (!response.ok) {
-// 			throw new Error(`HTTP error! Status: ${response.status}`);
-// 		}
-
-// 		const data = await response.json();
-// 		const artistIds = [
-// 			...new Set(data.items.flatMap((item: any) => item.album?.artists.map((artist: any) => artist.id)))
-// 		]
-// 		console.log(artistIds);
-
-// 		if(artistIds.length > 0) {
-// 			const artistData = await fetchGeneresFromArtistIds(artistIds as string[]); // Todo: Add a check to verify that artistIds are formatted correctly.
-// 			console.log(artistData);
-// 		}
-		
-// 		return data.items; // Each item contains album details
-// 	} catch (error) {
-// 		console.error("Error fetching saved albums:", error);
-// 		return [];
-// 	}
-// }
 
 const fetchItems = async (url: string) => {
     const accessToken = localStorage.getItem("access_token");
@@ -152,10 +77,44 @@ const fetchItems = async (url: string) => {
 		}
 
 		const data = await response.json();
-		console.log(data);
-		return data; // Each item contains album details
+		return data;
 	} catch (error) {
 		console.error("Error fetching saved albums:", error);
 		return [];
 	}
 }
+
+const fetchArtistsGenres = async (artistIds: string[]) => {
+	if (artistIds.length === 0) return {};
+
+	const accessToken = localStorage.getItem("access_token");
+	if (!accessToken) {
+		console.error("No access token found");
+		return {};
+	}
+
+	// Spotify API allows up to 50 artists in a single request
+	const chunkSize = 50;
+	const genreMap: Record<string, string[]> = {};
+
+	try {
+		for (let i = 0; i < artistIds.length; i += chunkSize) {
+			const chunk = artistIds.slice(i, i + chunkSize);
+			const url = `https://api.spotify.com/v1/artists?ids=${chunk.join(",")}`;
+			const response = await fetch(url, {
+				method: "GET",
+				headers: { Authorization: `Bearer ${accessToken}` },
+			});
+			if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+			const data = await response.json();
+			data.artists.forEach((artist: { id: string; genres: string[] }) => {
+				genreMap[artist.id] = artist.genres;
+			});
+		}
+	} catch (error) {
+		console.error("Error fetching artist genres:", error);
+	}
+
+	return genreMap;
+};

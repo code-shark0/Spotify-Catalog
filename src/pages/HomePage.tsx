@@ -41,23 +41,38 @@ const Homepage: FC = () => {
                 flexDirection: 'column', 
                 justifyContent: 'start',
                 alignItems: 'center', 
-                height: '100vh', 
+                height: '100%',
                 width: '100vw',
                 gap: '1rem',
             }}
         >
             <Box sx={{
+                display: 'flex',
+                justifyContent: 'end',
+                alignItems: 'center',
                 width: '100vw', 
                 height: '64px', 
-                backgroundColor: theme.palette.primary.dark
-
+                backgroundColor: theme.palette.primary.dark,
+                padding: '2rem'
             }}>
                 <Button variant="contained" color="secondary" onClick={handleLogoutClick}>
                     Logout
                 </Button>
             </Box>
-            <TextField variant={"outlined"} label={'Search'} onChange={(e) => setSearchValue(e.target.value)}/>
-            <ResultsList data={filteredData}/>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'start',
+                alignItems: 'center',
+                gap: '3rem',
+                width: '80vw', 
+                height: '100%',
+                backgroundColor: theme.palette.grey[100],
+                padding: '2rem'
+            }}>
+                <TextField variant={"outlined"} label={'Search'} onChange={(e) => setSearchValue(e.target.value)}/>
+                <ResultsList data={filteredData}/>
+            </Box>
         </Box>
     )
 }
