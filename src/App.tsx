@@ -9,10 +9,12 @@ import { JSX } from "@emotion/react/jsx-runtime";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const { isAuthenticated } = useAuth();
+    console.log('isAuthenticated', isAuthenticated);
     return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 function App() {
+    console.log('rendering app')
     return (
         <AuthProvider>
             <ThemeProvider theme={theme}>

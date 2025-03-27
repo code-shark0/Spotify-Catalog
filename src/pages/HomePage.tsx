@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import ResultsList from "../components/ResultsList";
 import theme from "../theme";
 import { fetchAllItems } from "../api/spotifyApi";

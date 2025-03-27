@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	useEffect(() => {
 		if (window.location.pathname === '/callback' && !isProcessingCallback) {
 			setIsProcessingCallback(true);
-			
+			console.log('Processing callback...', window.location.search);
 			handleCallback()
 				.then(() => {
 					setIsAuthenticated(true);
@@ -34,6 +34,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 	useEffect(() => {
 		if (isAuthenticated) {
+			// Im assuming that 60 minutes is the interval here based on the Spotify documentation, however
+			// in the authorization, it gives us an expires_in value that we should be using to determine this
+			// interval instead.
 			const interval = setInterval(() => {
 				refreshAccessToken();
 			}, 1000 * 60 * 59); // Refresh every 59 minutes

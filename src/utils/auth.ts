@@ -117,6 +117,7 @@ export const refreshAccessToken = async () => {
 
 	const url = "https://accounts.spotify.com/api/token";
 
+	// Prepare payload for token refresh
 	const payload = {
 		method: 'POST',
 		headers: {
@@ -128,16 +129,18 @@ export const refreshAccessToken = async () => {
 			client_id: CLIENT_ID
 		}),
 	}
+
+	// Make the token refresh request
 	const body = await fetch(url, payload);
 	const response = await body.json();
 
+	// Store the data in localStorage
 	localStorage.setItem('access_token', response.access_token);
 	if (response.refresh_token) {
 		localStorage.setItem('refresh_token', response.refresh_token);
 	}
 }
 
-// I would of course want to add a logout function with a button somewhere in the home page to access it.
 export const logout = async () => {
 	localStorage.removeItem('access_token');
 	window.location.href = '/';
