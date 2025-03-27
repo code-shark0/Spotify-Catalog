@@ -39,8 +39,9 @@ const Homepage: FC = () => {
             sx={{ 
                 display: 'flex', 
                 flexDirection: 'column', 
-                justifyContent: 'start',
+                justifyContent: 'flex-start',
                 alignItems: 'center', 
+                minHeight: '100vh',
                 height: '100%',
                 width: '100vw',
                 gap: '1rem',
