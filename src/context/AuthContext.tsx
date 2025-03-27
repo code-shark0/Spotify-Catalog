@@ -14,12 +14,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	useEffect(() => {
 		if (window.location.pathname === '/callback' && !isProcessingCallback) {
 			setIsProcessingCallback(true);
-			console.log('Processing callback...', window.location.search);
 			handleCallback()
 				.then(() => {
 					setIsAuthenticated(true);
 					// Use window.history to navigate away from callback path
-					window.history.replaceState({}, '', '/');
+					window.location.href = '/';
 				})
 				.catch(error => {
 					console.error('Authentication error:', error);

@@ -82,8 +82,7 @@ export const handleCallback = async () => {
 		// Check if the response is successful
 		if (!body.ok) {
 			const errorData = await body.json().catch(() => null);
-			console.error('Token exchange failed:', body.status, errorData);
-			throw new Error(`Token exchange failed: ${body.status} ${body.statusText}`);
+			throw new Error(`Token exchange failed: ${body.status} ${body.statusText} ${errorData}`);
 		}
 		
 		// Parse the response

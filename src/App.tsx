@@ -14,7 +14,6 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 function App() {
-    console.log('rendering app')
     return (
         <AuthProvider>
             <ThemeProvider theme={theme}>
