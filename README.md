@@ -1,54 +1,29 @@
-# React + TypeScript + Vite
+# Lightweight Spotify Catalog
+### By: Eli Green
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The goal of this project was to create a lightweight Spotify catalog application that would allow users to view their Spotify catalog in a simple, and user-friendly interface.
 
-Currently, two official plugins are available:
+It allows users to login with their spotify account, then view their catalog of saved Albums, Tracks, and Episodes. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Limited time was spent on the project, so any additional features, bugfixes, or improvements are either implicit or explicitely written as comments throughout the code.
 
-## Expanding the ESLint configuration
+## Project Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+To run this project, you will need to have Node.js and npm installed on your computer. 
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+After installing Node.js and npm, you can run the following commands to install the dependencies:
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+After installing the dependencies, you can run the following command to start the development server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm start
 ```
+
+This will start up the development server which will be accessible on your local machine at `http://localhost:3001`.
+
+## Transcription Implementation Write-up
+To display lyric transcriptions, I would start by thinking through the requirements and constraints of the project. If given the opportunity to, I would want to take the time to understand the end users perspective on the problem that they are trying to solve before assessing the best way of meeting their needs. If I had access to files that included timestamps with the lyrics, it would allow me to display the lyrics in time with when they were playing similar to a karaoke machine. To implement this option, I would need to create a new component that would display the lyrics in a scrolling manner, I would then utilize React features like useEffect to track when the lyrics need to be updated and displayed to the end user. We would probably also want to think about failsafes like having a static transcript fallback if all else failed. I would also be happy to talk through the process of implementing this feature in more detail in person.
