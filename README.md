@@ -24,6 +24,3 @@ npm start
 ```
 
 This will start up the development server which will be accessible on your local machine at `http://localhost:3001`.
-
-## Transcription Implementation Write-up
-To display lyric transcriptions, I would start by thinking through the requirements and constraints of the project. If given the opportunity to, I would want to take the time to understand the end users perspective on the problem that they are trying to solve before assessing the best way of meeting their needs. If I had access to files that included timestamps with the lyrics, it would allow me to display the lyrics in time with when they were playing similar to a karaoke machine. To implement this option, I would need to create a new component that would display the lyrics in a scrolling manner, I would then utilize React features like useEffect to track when the lyrics need to be updated and displayed to the end user. We would probably also want to think about failsafes like having a static transcript fallback if all else failed. I would also be happy to talk through the process of implementing this feature in more detail in person.
